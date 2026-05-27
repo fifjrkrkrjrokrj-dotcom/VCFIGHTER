@@ -125,8 +125,8 @@ STARTUP_SESSIONS: list[str] = [
 
 BOT_NAME    = _get("BOT_NAME",    default="VCFighter")
 BOT_VERSION = _get("BOT_VERSION", default="2.0")
-SUPPORT_URL = _get("SUPPORT_URL", default="https://t.me/TheVillainActive")
-SOURCE_URL  = _get("SOURCE_URL",  default="https://t.me/Villaiinn")
+SUPPORT_URL = _get("SUPPORT_URL", default="https://t.me/Zcziiy")
+SOURCE_URL  = _get("SOURCE_URL",  default="https://github.com/YOURNAME/VCFIGHTER")
 
 # ══════════════════════════════════════════════════════════════
 #  DERIVED / CONSTANTS
@@ -155,8 +155,8 @@ BASS_LEVELS = {
 #  OPTIONAL — Support & Community Links
 # ══════════════════════════════════════════════════════════════
 
-SUPPORT_CHAT    = _get("SUPPORT_CHAT",    default="https://t.me/+NJ9Vftkc10g2NmI1")       # Support group link
-SUPPORT_CHANNEL = _get("SUPPORT_CHANNEL", default="https://t.me/TheVillainActive")       # Updates channel link
+SUPPORT_CHAT    = _get("SUPPORT_CHAT",    default="https://t.me/Zcziiy")       # Support group link
+SUPPORT_CHANNEL = _get("SUPPORT_CHANNEL", default="https://t.me/Zcziiy")       # Updates channel link
 
 # ══════════════════════════════════════════════════════════════
 #  OPTIONAL — Bot Pictures (used in /start, /help etc)
@@ -167,9 +167,9 @@ _raw_pics = _get("VC_PICS", default="")
 VC_PICS: list[str] = (
     [p.strip() for p in _raw_pics.split(",") if p.strip()]
     if _raw_pics else [
-        "https://files.catbox.moe/pvmze9.jpg",
-        "https://files.catbox.moe/d87zj0.jpg",
-        "https://files.catbox.moe/i691sk.jpg",
+        "https://files.catbox.moe/eje8y8.jpeg",
+        "https://files.catbox.moe/ey2jzp.jpeg",
+        "https://files.catbox.moe/ah5y0f.jpeg",
         "https://files.catbox.moe/we4yju.jpeg",
     ]
 )
