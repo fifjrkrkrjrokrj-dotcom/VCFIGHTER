@@ -21,33 +21,37 @@ log = LOGGER("Start")
 _boot_time = time.time()
 
 # ══════════════════════════════════════════════════════════════
-#  CONSTANTS
+# CONSTANTS
 # ══════════════════════════════════════════════════════════════
 
 EFFECT_FIRE = "5104841245755180586"
 
-VC_PICS = getattr(Config, "VC_PICS", [
-    "https://files.catbox.moe/eje8y8.jpeg",
-    "https://files.catbox.moe/ey2jzp.jpeg",
-    "https://files.catbox.moe/ah5y0f.jpeg",
-    "https://files.catbox.moe/we4yju.jpeg",
-])
+VC_PICS = getattr(
+    Config,
+    "VC_PICS",
+    [
+        "https://files.catbox.moe/eje8y8.jpeg",
+        "https://files.catbox.moe/ey2jzp.jpeg",
+        "https://files.catbox.moe/ah5y0f.jpeg",
+        "https://files.catbox.moe/we4yju.jpeg",
+    ],
+)
 
 FIRE_FRAMES = [
     "🔥",
     "🔥🔥",
     "🔥🔥🔥",
     "⚔️ VCFIGHTER...",
-    "By 𝐕𝐈𝐋𝐋𝐀𝐈𝐍....",
-    "⚡ STARTING UP...",
+    "⚡ STARTING...",
     "💀 AWAKENING...",
 ]
 
 FIRE_DELAY = 0.4
 
 # ══════════════════════════════════════════════════════════════
-#  BUTTON HELPER
+# BUTTON HELPER
 # ══════════════════════════════════════════════════════════════
+
 
 def _api_btn(
     text: str,
@@ -55,6 +59,7 @@ def _api_btn(
     url: str = None,
     style: str = None,
 ) -> dict:
+
     btn = {"text": text}
 
     if callback_data:
@@ -63,6 +68,7 @@ def _api_btn(
     if url:
         if not url.startswith("http") and not url.startswith("tg://"):
             url = f"https://t.me/{url.replace('@', '')}"
+
         btn["url"] = url
 
     if style in ("primary", "danger", "success"):
@@ -72,20 +78,23 @@ def _api_btn(
 
 
 # ══════════════════════════════════════════════════════════════
-#  RAW API
+# RAW BOT API
 # ══════════════════════════════════════════════════════════════
+
 
 async def _raw_api(method: str, payload: dict) -> dict:
+
     url = f"https://api.telegram.org/bot{Config.BOT_TOKEN}/{method}"
 
-    async with aiohttp.ClientSession() as s:
-        async with s.post(url, json=payload) as r:
-            return await r.json()
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, json=payload) as response:
+            return await response.json()
 
 
 # ══════════════════════════════════════════════════════════════
-#  SEND PHOTO
+# SEND PHOTO
 # ══════════════════════════════════════════════════════════════
+
 
 async def _send_magic(
     chat_id: int,
@@ -122,33 +131,40 @@ async def _send_magic(
         {
             "chat_id": chat_id,
             "message_id": msg_id,
-            "reply_markup": {"inline_keyboard": markup},
+            "reply_markup": {
+                "inline_keyboard": markup
+            },
         },
     )
 
     if not kb_res.get("ok"):
-        log.warning(f"Reply markup failed: {kb_res.get('description')}")
+        log.warning(
+            f"editMessageReplyMarkup failed: "
+            f"{kb_res.get('description')}"
+        )
 
     return msg_id
 
 
 # ══════════════════════════════════════════════════════════════
-#  PANELS
+# PANELS
 # ══════════════════════════════════════════════════════════════
 
+
 async def _private_panel() -> list:
+
     me = await app.get_me()
 
     support_url = getattr(
         Config,
         "SUPPORT_URL",
-        "https://t.me/Zcziiy"
+        "https://t.me/Zcziiy",
     )
 
     source_url = getattr(
         Config,
         "SOURCE_URL",
-        "https://github.com/YOURNAME/VCFIGHTER"
+        "https://github.com/YOURNAME/VCFIGHTER",
     )
 
     owner_id = Config.OWNER_ID
@@ -196,12 +212,13 @@ async def _private_panel() -> list:
 
 
 async def _group_panel() -> list:
+
     me = await app.get_me()
 
     support_url = getattr(
         Config,
         "SUPPORT_URL",
-        "https://t.me/Zcziiy"
+        "https://t.me/Zcziiy",
     )
 
     return [
@@ -228,10 +245,12 @@ async def _group_panel() -> list:
 
 
 # ══════════════════════════════════════════════════════════════
-#  STATS
+# STATS
 # ══════════════════════════════════════════════════════════════
 
+
 def _uptime() -> str:
+
     secs = int(time.time() - _boot_time)
 
     h, r = divmod(secs, 3600)
@@ -241,6 +260,7 @@ def _uptime() -> str:
 
 
 def _sys_stats() -> tuple[float, float, float]:
+
     cpu = psutil.cpu_percent(interval=0.1)
     ram = psutil.virtual_memory().percent
     disk = psutil.disk_usage("/").percent
@@ -249,10 +269,12 @@ def _sys_stats() -> tuple[float, float, float]:
 
 
 # ══════════════════════════════════════════════════════════════
-#  CAPTIONS
+# CAPTIONS
 # ══════════════════════════════════════════════════════════════
 
+
 async def _private_caption(mention: str) -> str:
+
     me = await app.get_me()
 
     cpu, ram, disk = _sys_stats()
@@ -270,7 +292,7 @@ async def _private_caption(mention: str) -> str:
         f"└──────────────────────•\n\n"
 
         f"<blockquote>"
-        f"<spoiler><b>💀 THE ULTIMATE VC FIGHTER BOT!</b></spoiler>"
+        f"<b>💀 THE ULTIMATE VC FIGHTER BOT!</b>"
         f"</blockquote>\n"
 
         f"<blockquote>"
@@ -299,6 +321,7 @@ async def _private_caption(mention: str) -> str:
 
 
 async def _group_caption(group_name: str) -> str:
+
     ub_count = await active_userbot_count()
 
     mode = await get_mode()
@@ -311,33 +334,41 @@ async def _group_caption(group_name: str) -> str:
         f"💀 <b>Userbots:</b> {ub_count} Active\n"
         f"⚡ <b>Mode :</b> {mode.upper()}\n\n"
 
-        f"<spoiler>⚡ VC FIGHTER — Powered By YukiTeam</spoiler>"
+        f"⚡ VC FIGHTER — Powered By YukiTeam"
         f"</blockquote>"
     )
 
 
 # ══════════════════════════════════════════════════════════════
-#  FIRE ANIMATION
+# FIRE ANIMATION
 # ══════════════════════════════════════════════════════════════
 
+
 async def _fire_animation(message: Message):
+
     try:
+
         anim = await message.reply_text(FIRE_FRAMES[0])
 
         for frame in FIRE_FRAMES[1:]:
+
             await asyncio.sleep(FIRE_DELAY)
+
             await anim.edit_text(frame)
 
         return anim
 
     except Exception as e:
-        log.warning(f"Animation failed: {e}")
+
+        log.warning(f"Fire animation failed: {e}")
+
         return None
 
 
 # ══════════════════════════════════════════════════════════════
-#  PRIVATE START
+# PRIVATE START
 # ══════════════════════════════════════════════════════════════
+
 
 @app.on_message(pyro_filters.command("start") & pyro_filters.private)
 async def start_private(client, message: Message):
@@ -400,8 +431,9 @@ async def start_private(client, message: Message):
 
 
 # ══════════════════════════════════════════════════════════════
-#  GROUP START
+# GROUP START
 # ══════════════════════════════════════════════════════════════
+
 
 @app.on_message(pyro_filters.command("start") & pyro_filters.group)
 async def start_group(client, message: Message):
@@ -422,8 +454,9 @@ async def start_group(client, message: Message):
 
 
 # ══════════════════════════════════════════════════════════════
-#  CALLBACKS
+# CALLBACKS
 # ══════════════════════════════════════════════════════════════
+
 
 @app.on_callback_query(pyro_filters.regex("^vc_config$"))
 async def cb_config(client, cq):
@@ -440,7 +473,7 @@ async def cb_config(client, cq):
 
     await client.send_message(
         cq.message.chat.id,
-        "⚙️ /config"
+        "⚙️ /config",
     )
 
 
@@ -451,13 +484,14 @@ async def cb_help(client, cq):
 
     await client.send_message(
         cq.message.chat.id,
-        "ℹ️ /help"
+        "ℹ️ /help",
     )
 
 
 # ══════════════════════════════════════════════════════════════
-#  BOT ADDED
+# BOT ADDED TO GROUP
 # ══════════════════════════════════════════════════════════════
+
 
 @app.on_message(pyro_filters.new_chat_members)
 async def on_bot_added(client, message: Message):
@@ -488,6 +522,7 @@ async def on_bot_added(client, message: Message):
         )
 
         async def _auto_del():
+
             await asyncio.sleep(15)
 
             try:
